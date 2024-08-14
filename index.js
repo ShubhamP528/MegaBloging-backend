@@ -4,16 +4,26 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const app = express();
+const fileUpload = require("express-fileupload");
 
-const routes = require("./Routes/product");
+const routes = require("./Routes/Blog");
 const user = require("./Routes/user");
 const database = require("./Config/database");
-
-database(); // Ensure database connection is established
+const cloudinary = require("./Config/cloudinary");
 
 // Middleware to parse JSON and urlencoded request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
+
+database();
+cloudinary.cloudinaryConnect();
+
 app.use(user);
 app.use(routes);
 app.get("/", (req, res) => {

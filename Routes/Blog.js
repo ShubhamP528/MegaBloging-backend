@@ -3,29 +3,29 @@ const router = express.Router();
 const requireAuth = require("../middlerware/requireAuth");
 
 const {
-  addProduct,
-  getProduct,
-  getProductById,
-  updateProduct,
-  deleteProduct,
+  addBlog,
+  getBlogs,
+  getBlogById,
+  updateBlog,
+  deleteBlog,
   featuredProduct,
   lessThanPrice,
   ratingGreaterThan,
-} = require("../Controller/product");
+} = require("../Controller/Blog");
 
 router.get("/hii", (req, res) => {
   console.log("done");
 });
 
-router.get("/products", requireAuth, getProduct);
+router.get("/blogs", getBlogs);
 
-router.post("/product", requireAuth, addProduct);
+router.post("/blog", addBlog);
 
-router.get("/product/:productId", requireAuth, getProductById);
+router.get("/blog/:blogId", getBlogById);
 
-router.patch("/product/:productId", requireAuth, updateProduct);
+router.patch("/blog/:blogId", updateBlog);
 
-router.delete("/product/:productId", requireAuth, deleteProduct);
+router.delete("/blog/:blogId", deleteBlog);
 
 router.get("/featuredProduct", requireAuth, featuredProduct);
 
