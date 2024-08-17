@@ -55,6 +55,7 @@ const addBlog = async (req, res) => {
       return;
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err });
   }
 };
@@ -64,8 +65,11 @@ const addBlog = async (req, res) => {
 const getBlogs = async (req, res) => {
   try {
     const blog = await Blog.find({});
+    console.log(blog);
     res.status(200).json({ response: blog });
+    console.log("come back");
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err });
   }
 };

@@ -24,8 +24,8 @@ app.use(
 database();
 cloudinary.cloudinaryConnect();
 
-app.use(user);
-app.use(routes);
+app.use("/api/v1", user);
+app.use("api/v1", routes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
