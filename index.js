@@ -26,11 +26,7 @@ app.use(
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3001",
-      "https://bookmanagement528.netlify.app/",
-      "https://book-management-frontend-wheat.vercel.app/",
-    ],
+    origin: ["http://localhost:3001", "https://abhay-blogs.netlify.app//"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
