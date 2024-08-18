@@ -5,6 +5,8 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const app = express();
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
+const helmet = require("helmet");
 
 const routes = require("./Routes/Blog");
 const user = require("./Routes/user");
@@ -19,6 +21,36 @@ app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp/",
+  })
+);
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3001",
+      "https://bookmanagement528.netlify.app/",
+      "https://book-management-frontend-wheat.vercel.app/",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'",
+        "https://js.stripe.com",
+        "blob:",
+      ],
+      connectSrc: ["'self'", "https://api.stripe.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
   })
 );
 
