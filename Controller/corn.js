@@ -1,5 +1,5 @@
 const Contact = require("../Models/Contact");
-const sendContactEmail = require("../config/nodemailer");
+const sendContactEmail = require("../Config/nodemailer");
 
 const contact = async (req, res) => {
   try {
