@@ -8,6 +8,7 @@ const fileUpload = require("express-fileupload");
 
 const routes = require("./Routes/Blog");
 const user = require("./Routes/user");
+const corn = require("./Routes/corn");
 const database = require("./Config/database");
 const cloudinary = require("./Config/cloudinary");
 
@@ -25,7 +26,8 @@ database();
 cloudinary.cloudinaryConnect();
 
 app.use("/api/v1", user);
-app.use("api/v1", routes);
+app.use("/api/v1", routes);
+app.use("/api/v1", corn);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

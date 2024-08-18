@@ -19,6 +19,16 @@ const blogSchema = new mongoose.Schema({
   Video: {
     type: String,
   },
+  category: {
+    type: String,
+    enum: ["Technology", "Lifestyle", "Education", "Health", "Entertainment"], // Add or modify categories as needed
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Reference to a User model
+    required: true,
+  },
 });
 
 const Blog = mongoose.model("Blog", blogSchema);

@@ -4,6 +4,62 @@ const videoUpload = require("./VideoUpload");
 const cloudinary = require("cloudinary").v2;
 
 // Add a new Blog
+// const addBlog = async (req, res) => {
+//   console.log(req.body);
+//   console.log(req.files);
+//   try {
+//     const blog = req.body;
+//     const blogFile = req.files;
+
+//     if (blogFile?.img && blogFile?.videoFile) {
+//       // console.log(blogFile.img);
+//       const imgurl = await imageUpload.imageUpload(blogFile.img);
+//       console.log("response as secure url for image " + imgurl);
+//       const videourl = await videoUpload.videoFileUpload(blogFile.videoFile);
+//       console.log("response as secure url for video " + videourl);
+//       const response = await Blog.create({
+//         Title: blog.title,
+//         Content: blog.content,
+//         Video: videourl,
+//         Img: imgurl,
+//       });
+//       console.log(response);
+//       res.status(200).json({ resonse: "Blog created successfully" });
+//       return;
+//     }
+
+//     if (blogFile?.img || blogFile?.videoFile) {
+//       if (blogFile?.img) {
+//         const imgurl = await imageUpload.imageUpload(blogFile.img);
+//         console.log("response as secure url for image " + imgurl);
+
+//         const response = await Blog.create({
+//           Title: blog.title,
+//           Content: blog.content,
+//           Img: imgurl,
+//         });
+//         console.log(response);
+//       }
+//       if (blogFile?.videoFile) {
+//         const videourl = await videoUpload.videoFileUpload(blogFile.videoFile);
+//         console.log("response as secure url for video " + videourl);
+
+//         const response = await Blog.create({
+//           Title: blog.title,
+//           Content: blog.content,
+//           Video: videourl,
+//         });
+//         console.log(response);
+//       }
+//       res.status(200).json({ resonse: "Blog created successfully" });
+//       return;
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: err });
+//   }
+// };
+
 const addBlog = async (req, res) => {
   console.log(req.body);
   console.log(req.files);
@@ -11,52 +67,36 @@ const addBlog = async (req, res) => {
     const blog = req.body;
     const blogFile = req.files;
 
-    if (blogFile?.img && blogFile?.videoFile) {
-      // console.log(blogFile.img);
-      const imgurl = await imageUpload.imageUpload(blogFile.img);
+    let imgurl = blog.imageUrl || null; // Check if image URL is provided in the request body
+    let videourl = null;
+
+    // If image file is uploaded, override the imageUrl with the uploaded image URL
+    if (blogFile?.img) {
+      imgurl = await imageUpload.imageUpload(blogFile.img);
       console.log("response as secure url for image " + imgurl);
-      const videourl = await videoUpload.videoFileUpload(blogFile.videoFile);
+    }
+
+    // If video file is uploaded, process it
+    if (blogFile?.videoFile) {
+      videourl = await videoUpload.videoFileUpload(blogFile.videoFile);
       console.log("response as secure url for video " + videourl);
-      const response = await Blog.create({
-        Title: blog.title,
-        Content: blog.content,
-        Video: videourl,
-        Img: imgurl,
-      });
-      console.log(response);
-      res.status(200).json({ resonse: "Blog created successfully" });
-      return;
     }
 
-    if (blogFile?.img || blogFile?.videoFile) {
-      if (blogFile?.img) {
-        const imgurl = await imageUpload.imageUpload(blogFile.img);
-        console.log("response as secure url for image " + imgurl);
+    // Now, proceed with blog creation using either the uploaded files or the URL
+    const response = await Blog.create({
+      Title: blog.title,
+      Content: blog.content,
+      Img: imgurl, // Will either be the image URL provided by user or the uploaded file URL
+      Video: videourl, // Only included if a video file is uploaded
+      category: blog.category, // Include the category field
+      userId: blog.userId, // Include the userId field
+    });
 
-        const response = await Blog.create({
-          Title: blog.title,
-          Content: blog.content,
-          Img: imgurl,
-        });
-        console.log(response);
-      }
-      if (blogFile?.videoFile) {
-        const videourl = await videoUpload.videoFileUpload(blogFile.videoFile);
-        console.log("response as secure url for video " + videourl);
-
-        const response = await Blog.create({
-          Title: blog.title,
-          Content: blog.content,
-          Video: videourl,
-        });
-        console.log(response);
-      }
-      res.status(200).json({ resonse: "Blog created successfully" });
-      return;
-    }
+    console.log(response);
+    res.status(200).json({ message: "Blog created successfully" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: err });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -64,7 +104,7 @@ const addBlog = async (req, res) => {
 
 const getBlogs = async (req, res) => {
   try {
-    const blog = await Blog.find({});
+    const blog = await Blog.find({}).populate("userId");
     console.log(blog);
     res.status(200).json({ response: blog });
     console.log("come back");
@@ -79,7 +119,7 @@ const getBlogs = async (req, res) => {
 const getBlogById = async (req, res) => {
   try {
     const blodId = req.params.blogId;
-    const blog = await Blog.findById(blodId);
+    const blog = await Blog.findById(blodId).populate("userId");
     res.status(200).json({ response: blog });
   } catch (err) {
     res.status(500).json({ error: err });

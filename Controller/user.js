@@ -20,7 +20,7 @@ const login = async (req, res) => {
     const username = user.username;
     //create a token
     const token = createToken(user._id);
-    res.status(200).json({ username, token });
+    res.status(200).json({ username, token, userId: user._id });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -35,10 +35,18 @@ const Signup = async (req, res) => {
 
     // create a token
     const token = createToken(user._id);
-    res.status(200).json({ username, token });
+    res.status(200).json({ username, token, userId: user._id });
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
 };
+const getUser = async (req, res) => {
+  try {
+    const user = req.user;
+    res.json({ user });
+  } catch (error) {
+    res.status(404).json({ error: "User not found" });
+  }
+};
 
-module.exports = { login, Signup };
+module.exports = { login, Signup, getUser };
