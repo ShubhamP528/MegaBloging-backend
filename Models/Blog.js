@@ -21,7 +21,15 @@ const blogSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["Technology", "Lifestyle", "Education", "Health", "Entertainment"], // Add or modify categories as needed
+    enum: [
+      "Technology",
+      "Lifestyle",
+      "Education",
+      "Health",
+      "Entertainment",
+      "Programming",
+      "React",
+    ], // Add or modify categories as needed
     required: true,
   },
   userId: {
